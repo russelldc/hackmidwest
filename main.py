@@ -5,7 +5,7 @@ import time
 op3nvoice.set_key('aor68mmexQMeNSWEY5GG+SAYP7BKED+RWKVXL8lH2bjbg')
 
 # print 'derp'
-bundles = op3nvoice.create_bundle(name='test bundle', media_url='http://www.moviesoundclips.net/download.php?id=1746&ft=wav')
+bundles = op3nvoice.create_bundle(name='test bundle', media_url='http://www.moviesoundclips.net/download.php?id=1745&ft=wav')
 
 queries = ['dogs', 'cats']
 test = False
