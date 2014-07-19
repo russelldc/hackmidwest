@@ -15,7 +15,6 @@ while test != True:
 	time.sleep(15)
 
 
-
 for searchquery in queries:
 	result = op3nvoice.search(query=searchquery)
 
@@ -43,4 +42,4 @@ for searchquery in queries:
 			++index
 
 
-op3nvoice.delete_bundle(bundles['id'])
+op3nvoice.delete_bundle('/v1/bundles/' + bundles['id'])
