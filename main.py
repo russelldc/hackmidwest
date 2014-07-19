@@ -20,13 +20,10 @@ for searchquery in queries:
 		bundle = op3nvoice.get_bundle(item['href'])
 
 		bundle_id = item['href'][12:]		
-		tl = op3nvoice.get_track_list(item['href'])
-		
-		# pprint.pprint(tl['_links']['o3v:tracks']['status'])
+		tracks = op3nvoice.get_track_list(bundle['_links']['o3v:tracks']['href'])['tracks']
 
-		# print tl['_links']['o3v:tracks']
-		# for track in tracks['tracks']:
-		# 	print track
+		for track in tracks:
+			print track['status']
 
 		search_hits = results[index]['term_results'][0]['matches'][0]['hits']
 		print str(len(search_hits)) + ' times'
