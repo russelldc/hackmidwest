@@ -1,11 +1,20 @@
 from op3nvoice_python_2 import op3nvoice
 import pprint
+import time
 
 op3nvoice.set_key('aor68mmexQMeNSWEY5GG+SAYP7BKED+RWKVXL8lH2bjbg')
 
 # print 'derp'
-# op3nvoice.create_bundle(name='test bundle', media_url='https://s3-us-west-2.amazonaws.com/op3nvoice/harvard-sentences-1.wav')
+bundles = op3nvoice.create_bundle(name='test bundle', media_url='https://s3-us-west-2.amazonaws.com/op3nvoice/harvard-sentences-1.wav')
+
 queries = ['dogs', 'cats']
+test = False
+while !test:
+	if op3nvoice.get_track_list(bundles['_link']['o3v:tracks']['href'])['status'] == 'ready':
+		test= True
+	time.sleep(15)
+
+
 
 for searchquery in queries:
 	result = op3nvoice.search(query=searchquery)
