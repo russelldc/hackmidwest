@@ -2,6 +2,7 @@
   "name": "hello"
 , "version": "0.0.1"
 , "dependencies": {
-    "express": "latest"
+    "express": "latest",
+    "node-op3nvoice": "latest"
   }
 }
