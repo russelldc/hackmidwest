@@ -9,9 +9,9 @@ bundles = op3nvoice.create_bundle(name='test bundle', media_url='http://www.movi
 
 queries = ['dogs', 'cats']
 test = False
-while !test:
-	if op3nvoice.get_track_list(bundles['_link']['o3v:tracks']['href'])['status'] == 'ready':
-		test= True
+while test != True:
+	if op3nvoice.get_track_list(bundles['_links']['o3v:tracks']['href'])['status'] == 'ready':
+		test = True
 	time.sleep(15)
 
 
@@ -41,3 +41,6 @@ for searchquery in queries:
 		for search_hit in search_hits:
 			print str(search_hit['start']) + ' -- ' + str(search_hit['end'])
 			++index
+
+
+op3nvoice.delete_bundle(bundles['id'])
