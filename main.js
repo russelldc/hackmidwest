@@ -13,7 +13,7 @@ var data = {name: "test bundle", media_url: "https://www.dropbox.com/s/q3jmi6eo0
 
 client.createBundle(data, function(err, res){
 	if(err) {
-		return done(err);
+		console.log(err);
 	}; 
 
 	bundles = res;
@@ -32,23 +32,26 @@ function waitForTracks () {
 	// wait for processing to finish
 	var test = false;
 
-	while (!test) {
+	//while (!test) {
 		console.log('while loop');
 
-		client.getTracks(bundles['_links']['o3v:tracks']['href'], function(err, res) {
+
+
+		client.getTracks(bundles.id, function(err, res) {
 			console.log('inside get tracks callback');
+
 			if(err) {
 				console.log(err);
 				process.exit();
 			};
 
-			if (res['status'] === 'ready') {
+			if (res.status === 'ready') {
 				test = true;
 			};
 		});
-		
-		sleep_until(15);
-	};
+
+		//sleep_until(15);
+	//};
 
 	searchForTerms();
 }
@@ -59,7 +62,7 @@ function searchForTerms() {
 
 		client.search({query:searchquery}, function(err, res) {
 			if (err) {
-				return done(err);
+				return console.log(err);
 			};
 
 			var results = res['item_results'];
@@ -91,7 +94,7 @@ function deleteBundle() {
 	console.log('Deleting audio file');
 	client.removeBundle('/v1/bundles/' + bundles['id'], function(err, res) {
 		if (err) {
-			return done(err);
+			return console.log(err);
 		};
 
 		console.log(res);
