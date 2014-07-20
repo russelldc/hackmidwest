@@ -16,7 +16,29 @@
         <link rel="stylesheet" href="css/o3v-player.css"/>
 
         <script type="text/javascript">
+
+            function loadXMLDoc()
+            {
+                $.ajax({
+                     url: "/info", 
+                     type: 'POST', 
+                     // data: "name="+value, 
+                     success: function(data){ 
+                        // $("#result").html(data);
+                        document.body.innerHTML += data;
+                     }
+                });
+
+
+                var ajaxtest = new XMLHttpRequest();
+                ajaxtest.open("POST","/info",true);
+                ajaxtest.send();
+
+            }
             $(document).ready(function() {
+                $.get('/',function(data,err){
+
+                })
 
                 // Set the path to the jplayer swf file.
                 // o3vPlayer.jPlayerOptions.swfPath = 'scripts/jquery';
@@ -66,5 +88,8 @@
         <br>
         <div id="player_1_search_tags" class="o3v-search-tag-box"></div>
         <div id="player_instance_1"></div>
+
+        <div id="myDiv"><h2>Let AJAX change this text</h2></div>
+        <button type="button" onclick="loadXMLDoc()">Change Content</button>
     </body>
 </html>
