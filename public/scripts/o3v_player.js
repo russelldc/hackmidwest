@@ -231,26 +231,29 @@
 		    }
 		}
 		return player;
-            },
+        },
 
 	    addItemResultMarkers: function(player,audioDurSeconds,itemResult,searchTerms) {
-	    	console.log(itemResult.term_results);
-		if (player && itemResult && itemResult.term_results) {
-		    // Insert the overlay over the slider so mouse events are 
-                    // bubbled properly
-		    var parent = player.parent();
-		    parent.find(".o3v-slider-playback .ui-slider-handle").before('<div class="o3v-scrubber-search-overlay"></div>');
-		    var overlay = parent.find("div.o3v-scrubber-search-overlay");
-		    $.each(itemResult.term_results,function(index,val) { 
-			$.each(val.matches,function(mindex,match) { 
-                            if (match.type === 'audio') {
-			        $.each(match.hits,function(hindex,hit,hitlist) {
-				    overlay.append('<div class="o3v-scrubber-search-mark o3v-search-color-' + (index % 10) + '" style="margin-left:'+ (hit.start/audioDurSeconds)*100.0 + '%;"><a href="#" title="'+ (searchTerms?searchTerms[index].term+' ':'') + $.jPlayer.convertTime(hit.start) + '"></a></div>');
-			        });
-			    }
-                        });
-		    });
-		}
+			if (player && itemResult) {
+			    // Insert the overlay over the slider so mouse events are bubbled properly
+
+			    var parent = player.parent();
+			    parent.find(".o3v-slider-playback .ui-slider-handle").before('<div class="o3v-scrubber-search-overlay"></div>');
+			    var overlay = parent.find("div.o3v-scrubber-search-overlay");
+			    console.log(itemResult);
+			    console.log(itemResult[1]);
+			    console.log(itemResult[1].term_results);
+			    $.each(itemResult[1].term_results,function(index,val) { 
+			    	console.log(val);
+					$.each(val.matches,function(mindex,match) { 
+		                if (match.type === 'audio') {
+					        $.each(match.hits,function(hindex,hit,hitlist) {
+						    	overlay.append('<div class="o3v-scrubber-search-mark o3v-search-color-' + (index % 10) + '" style="margin-left:'+ (hit.start/audioDurSeconds)*100.0 + '%;"><a href="#" title="'+ (searchTerms?searchTerms[index].term+' ':'') + $.jPlayer.convertTime(hit.start) + '"></a></div>');
+					        });
+					    }
+		            });
+			    });
+			}
 	    }
 
 	}; // end of return statement

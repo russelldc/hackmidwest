@@ -4,7 +4,20 @@
         <meta http-equiv="X-UA-Compatible" content="IE=9"/>
         <title>OP3Nvoice Player Demo</title>
         <style type="text/css">
-            body { font-family: sans-serif; }
+            body { 
+                font-family: sans-serif; 
+            }
+
+            form, h2, #myDiv, .btn, .o3v-search-tag-box, h4 {
+                margin-left: 20px;
+            }
+
+            label {
+                margin-top: 10px;
+            }
+
+
+
         </style>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
@@ -25,7 +38,7 @@
         <script type="text/javascript">
 
             function loadXMLDoc(){
-               
+
                 $.ajax({
                      url: "/info", 
                      type: 'POST', 
@@ -34,26 +47,27 @@
                         dealWithData(data);
                      }
                 });
+
+                                // replace form with Loading, Please Wait
+                $("div.replaceDiv").replaceWith("<h4>Loading, Please Wait</h4>");
             };
 
             function dealWithData(data) {
                 console.dir(data);
 
+                $("div.replaceDiv").replaceWith('<div id="player_1_search_tags" class="o3v-search-tag-box"></div><div id="player_instance_1"></div>');
+
+
                 o3vPlayer.jPlayerOptions.swfPath = 'scripts/jquery';
 
                 // Set to the playback URL for the audio file.
                 var mediaURL = data[1].url;
-                // .split("?")[0];
-
-                ////////////////////////////////////////////////////////
-
-                // This is a sample search_terms array from a SearchCollection
                 var searchTerms = data[4].search_terms;
 
                 // This is a sample "ItemResult" object from a SearchCollection JSON
                 // object. It is one item in the item_results array.
-                var itemResult =  data[5].item_results[0];
-                // <?php echo substr($item_results, 1, -1); ?>;
+                var itemResult =  data[5].item_results;
+
 
                 ////////////////////////////////////////////////////////
                 // Create a player and add in search results marks
@@ -61,6 +75,7 @@
                 var player = o3vPlayer.createPlayer("#player_instance_1", mediaURL, convDuration,{volume:0.5});
                 o3vPlayer.addItemResultMarkers(player, convDuration, itemResult, searchTerms);
 
+                
                 ////////////////////////////////////////////////////////
                 // Create words tags for SearchCollection.
                 for (var i=0,c=searchTerms.length;i<c;i++) {
@@ -73,7 +88,6 @@
                 dtag = document.createElement('div');
                 $(dtag).addClass("o3v-clear");
                 $("#player_1_search_tags").append(dtag);
-                ////////////////////////////////////////////////////////
 
                 //delete the stuff
                 $.ajax({
@@ -88,25 +102,44 @@
 
             }
             $(document).ready(function() {
-                $.get('/',function(data,err){
-
-                })
+                
             });
         </script>
     
     </head>
     <body>
         <h2>Presentation Analytics</h2>
-        <br>
-        <div id="player_1_search_tags" class="o3v-search-tag-box"></div>
-        <div id="player_instance_1"></div>
+        
+        <div class="replaceDiv">
+            <form id="dataForm">
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="mediaUrl">MP3 URL</label>
+              <div class="controls">
+                <input id="mediaUrl" name="mediaUrl" type="text" placeholder="" class="input-xlarge">
+                
+              </div>
+            </div>
 
-        <form id="dataForm">
-            MP3 Url: <input type="text" name="mediaUrl"><br>
-            Search Terms: <input type="text" name="searchTerms">
-        </form>
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="searchTerms">Search Terms</label>
+              <div class="controls">
+                <input id="searchTerms" name="searchTerms" type="text" placeholder="" class="input-xlarge">
+                
+              </div>
+            </div>
+            </form>
 
-        <div id="myDiv"><h5>Click the button below when you have entered the required information.</h5></div>
-        <button type="button" onclick="loadXMLDoc()">Change Content</button>
+            <div id="myDiv"><h5>Click the button below when you have entered the required information.</h5></div>
+            <button type="button" onclick="loadXMLDoc()" class="btn btn-primary">Analyze!</button>
+
+        </div>
+
+        
+        <br><br>
+        
+
+
     </body>
 </html>

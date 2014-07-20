@@ -17,7 +17,7 @@ var queriesPlayer;
 function startProcess (resu, url, search) {
 	// create file
 	client = new op3nvoice.Client("api-beta.op3nvoice.com", "aor68mmexQMeNSWEY5GG+SAYP7BKED+RWKVXL8lH2bjbg");
-	queries = search.split("|");
+	queries = search.split(",");
 	queriesPlayer = search;
 	var data = {name: "test bundle", media_url: url};
 
@@ -102,7 +102,7 @@ function searchForTerms(resu, getTracks) {
 
 			console.log('The total time of "' + searchquery + '" being spoken is: ' + length);
 			console.log('And it is ' + percent + '% of your time');
-			console.log('queryCont: ');
+			console.log('queryCount: ');
 			console.log(queryCount );
 			console.log(' queries.length-1: ');
 			console.log(queries.length-1);
