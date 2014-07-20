@@ -151,7 +151,7 @@ app.get('/', function(req, res) {
 app.post('/info',function(req, res){
 	req.on('data', function() {
 		var argumentsys = arguments[0] + "";
-		var mediaUrl = argumentsys.split("&")[0].split("=")[1];
+		var mediaUrl = argumentsys.split("&")[0].split("=")[1].replace('+', ' ');
 		var searchTerms = argumentsys.split("&")[1].split("=")[1];
 		// console.log(searchTerms);
 
