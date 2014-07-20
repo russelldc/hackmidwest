@@ -6,14 +6,21 @@
         <style type="text/css">
             body { 
                 font-family: sans-serif; 
+                margin-left: auto !important;
+                margin-right: auto !important;
+                width: 70%;
             }
 
-            form, h2, #myDiv, .btn, .o3v-search-tag-box, h4, canvas {
-                margin-left: 20px;
+            form, h2, #myDiv, .btn, .o3v-search-tag-box, h4, canvas, img {
+                margin-left: 30px;
             }
 
             label {
                 margin-top: 10px;
+            }
+
+            #myDiv {
+                margin-top: 25px;
             }
 
 
@@ -51,7 +58,7 @@
                 });
 
                                 // replace form with Loading, Please Wait
-                $("div.replaceDiv").replaceWith("<div class='replaceDiv'><h4>Loading, Please Wait</h4></div>");
+                $("div.replaceDiv").replaceWith("<div class='replaceDiv'><h4>Loading, Please Wait</h4> <img src='Chasing arrows.gif'></img></div>");
 
             };
 
@@ -154,7 +161,7 @@
     </head>
     <body>
         <h2>Presentation Analytics</h2>
-        
+        <br>
         <div class="replaceDiv">
             <form id="dataForm">
             <!-- Text input-->

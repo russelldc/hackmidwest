@@ -17,8 +17,9 @@ var queriesPlayer;
 function startProcess (resu, url, search) {
 	// create file
 	client = new op3nvoice.Client("api-beta.op3nvoice.com", "aor68mmexQMeNSWEY5GG+SAYP7BKED+RWKVXL8lH2bjbg");
-	queries = search.split(",");
-	queriesPlayer = search.replace(",", "|");
+	queries = search.split('|');
+	// queriesPlayer = search.replace(/,/g, "|");
+	queriesPlayer = search;
 	var data = {name: "test bundle", media_url: url};
 
 	returnObject = [{terms: queriesPlayer}, {url: data.media_url}];
