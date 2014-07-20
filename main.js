@@ -22,38 +22,24 @@ client.createBundle(data, function(err, res){
 	waitForTracks();
 });
 
-function sleep_until (seconds) {
-   var max_sec = new Date().getTime();
-   while (new Date() < max_sec + seconds * 1000) {}
-   return true;
-}
-
 function waitForTracks () {
 	// wait for processing to finish
-	var test = false;
+	client.getTracks(bundles.id, function(err, res) {
+		console.log('inside get tracks callback');
 
-	//while (!test) {
-		console.log('while loop');
+		if(err) {
+			console.log(err);
+		}
 
+		if (res.status === 'ready') {
+			searchForTerms();
 
-
-		client.getTracks(bundles.id, function(err, res) {
-			console.log('inside get tracks callback');
-
-			if(err) {
-				console.log(err);
-				process.exit();
-			};
-
-			if (res.status === 'ready') {
-				test = true;
-			};
-		});
-
-		//sleep_until(15);
-	//};
-
-	searchForTerms();
+		} else {
+			setImmediate(function () {
+				setTimeout(waitForTracks, 15000);
+			});
+		}
+	});
 }
 
 function searchForTerms() {
@@ -73,7 +59,6 @@ function searchForTerms() {
 				var bundle = client.getBundlefunction(item['href']);
 
 				var bundle_id = item['href'].slice(12);
-				var tracks = client.getTracks(bundle['_links']['o3v:tracks']['href'])['tracks'];
 
 				var search_hits = results[index]['term_results'][0]['matches'][0]['hits'];
 				console.log('Search term: "' + searchquery + '" occured ' + (search_hits).length + ' times.')
@@ -85,27 +70,24 @@ function searchForTerms() {
 				}
 			}
 		});
-
-		deleteBundle();
 	}
+
+	deleteBundle();
 }
 
 function deleteBundle() {
 	console.log('Deleting audio file');
-	client.removeBundle('/v1/bundles/' + bundles['id'], function(err, res) {
+	client.removeBundle(bundles.id, function(err, res) {
 		if (err) {
-			return console.log(err);
+			return console.log('error ' + err);
 		};
-
 		console.log(res);
 	});
 }
 
 
-
-
 app.get('/', function(req, res) {
-  res.send('hello world');
+	res.sendfile('./index.html');
 });
 
 app.listen(3000)
