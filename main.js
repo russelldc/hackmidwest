@@ -44,33 +44,35 @@ function waitForTracks () {
 
 function searchForTerms() {
 	// search for each query term
-	for (searchquery in queries) {
+	
+	queries.forEach(function(searchquery) {
+
 
 		client.search({query:searchquery}, function(err, res) {
 			if (err) {
 				return console.log(err);
 			};
 
-			var results = res['item_results'];
-			var items = res['_links']['items'];
+			var results = res.item_results;
+			var items = res._links.items;
 
 			var index = 0;
-			for (item in items) {
-				var bundle = client.getBundlefunction(item['href']);
+			items.forEach(function (item) {
 
-				var bundle_id = item['href'].slice(12);
+				var bundle_id = item.href.slice(12);
 
-				var search_hits = results[index]['term_results'][0]['matches'][0]['hits'];
+				var search_hits = results[index].term_results[0].matches[0].hits;
 				console.log('Search term: "' + searchquery + '" occured ' + (search_hits).length + ' times.')
 
 
-				for (search_hit in search_hits) {
-					console.log(search_hit['start'] + ' -- ' + search_hit['end']);
+				search_hits.forEach(function(search_hit) {
+					console.log(search_hit.start + ' -- ' + search_hit.end);
 					index++;
-				}
-			}
+				});
+			});
 		});
-	}
+	
+	});
 
 	deleteBundle();
 }
@@ -87,6 +89,7 @@ function deleteBundle() {
 
 
 app.get('/', function(req, res) {
+
 	res.sendfile('./index.html');
 });
 
