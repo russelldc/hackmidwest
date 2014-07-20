@@ -8,7 +8,7 @@
                 font-family: sans-serif; 
             }
 
-            form, h2, #myDiv, .btn, .o3v-search-tag-box, h4 {
+            form, h2, #myDiv, .btn, .o3v-search-tag-box, h4, canvas {
                 margin-left: 20px;
             }
 
@@ -24,6 +24,8 @@
         <script src="scripts/jquery/jquery-ui-1.9.2.custom.min.js" type="text/javascript"></script>
         <script src="scripts/jquery/jquery.jplayer-2.2.0.min.js" type="text/javascript"></script>
         <script src="scripts/o3v_player.js" type="text/javascript"></script>
+        <script src="Chart/Chart.js" type="text/javascript"></script>
+        <script type="text/javascript" src="Chart/Chart.Bar.js"></script>
         <!-- Latest compiled and minified CSS --> 
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"> 
         <!-- Optional theme --> 
@@ -50,10 +52,13 @@
 
                                 // replace form with Loading, Please Wait
                 $("div.replaceDiv").replaceWith("<h4>Loading, Please Wait</h4>");
+
             };
 
             function dealWithData(data) {
                 console.dir(data);
+                var chartData = data[3].wordAmounts;
+                loadChart(chartData);
 
                 $("div.replaceDiv").replaceWith('<div id="player_1_search_tags" class="o3v-search-tag-box"></div><div id="player_instance_1"></div>');
 
@@ -89,7 +94,6 @@
                 $(dtag).addClass("o3v-clear");
                 $("#player_1_search_tags").append(dtag);
 
-                //delete the stuff
                 $.ajax({
                      url: "/delete", 
                      type: 'POST', 
@@ -98,11 +102,52 @@
                      }
                 });
 
-                var chartdata = data[3].wordAmounts;
-
+            
             }
+
+            function loadChart(chartDatas) {
+                console.log(chartDatas);
+                var labelss = [], timess = [], percentagess = [];
+
+                for(var i = 0; i<chartDatas.length; i++) {
+                    labelss.push(chartDatas[i].name);
+                    timess.push(chartDatas[i].times);
+                    percentagess.push(chartDatas[i].percentage.toFixed(2));
+                }
+                console.log(labelss);
+                console.log(timess);
+                console.log(percentagess);
+
+
+
+                var data = {
+                labels: labelss,
+                datasets: [
+                {
+                label: "Occurences",
+                fillColor: "rgba(223, 35, 10, 0.5)",
+                strokeColor: "rgba(220,220,220,0.8)",
+                highlightFill: "rgba(220,220,220,0.75)",
+                highlightStroke: "rgba(220,220,220,1)",
+                data: timess
+                },
+                {
+                label: "Percentage of Speech",
+                fillColor: "rgba(151,187,205,0.5)",
+                strokeColor: "rgba(151,187,205,0.8)",
+                highlightFill: "rgba(151,187,205,0.75)",
+                highlightStroke: "rgba(151,187,205,1)",
+                data: percentagess
+                }
+                ]
+                };
+                // Get context with jQuery - using jQuery's .get() method.
+                var ctx = $("#myChart").get(0).getContext("2d");
+                // This will get the first returned node in the jQuery collection.
+                var myNewChart = new Chart(ctx).Bar(data);
+            }
+
             $(document).ready(function() {
-                
             });
         </script>
     
@@ -134,7 +179,11 @@
             <div id="myDiv"><h5>Click the button below when you have entered the required information.</h5></div>
             <button type="button" onclick="loadXMLDoc()" class="btn btn-primary">Analyze!</button>
 
+            
+
         </div>
+
+        <canvas id="myChart" width="400" height="400"></canvas>
 
         
         <br><br>

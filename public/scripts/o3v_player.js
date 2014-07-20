@@ -240,10 +240,8 @@
 			    var parent = player.parent();
 			    parent.find(".o3v-slider-playback .ui-slider-handle").before('<div class="o3v-scrubber-search-overlay"></div>');
 			    var overlay = parent.find("div.o3v-scrubber-search-overlay");
-			    console.log(itemResult);
-			    console.log(itemResult[1]);
-			    console.log(itemResult[1].term_results);
-			    $.each(itemResult[1].term_results,function(index,val) { 
+			    console.dir(eval(itemResult));
+			    $.each(eval(itemResult)[0].term_results,function(index,val) { 
 			    	console.log(val);
 					$.each(val.matches,function(mindex,match) { 
 		                if (match.type === 'audio') {

@@ -98,7 +98,7 @@ function searchForTerms(resu, getTracks) {
 				total+=length;
 			});
 			percent = (length/getTracks.duration)*100;
-			wordAmounts.push({name: searchquery, times: times});
+			wordAmounts.push({name: searchquery, times: times, percentage: percent});
 
 			console.log('The total time of "' + searchquery + '" being spoken is: ' + length);
 			console.log('And it is ' + percent + '% of your time');
