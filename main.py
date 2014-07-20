@@ -4,10 +4,10 @@ import time
 
 op3nvoice.set_key('aor68mmexQMeNSWEY5GG+SAYP7BKED+RWKVXL8lH2bjbg')
 
-# print 'derp'
-bundles = op3nvoice.create_bundle(name='test bundle', media_url='http://www.moviesoundclips.net/download.php?id=1745&ft=wav')
+bundles = op3nvoice.create_bundle(name='test bundle', media_url='https://www.dropbox.com/s/q3jmi6eo0z36k01/um test.wav?dl=1')
+print 'Processing your audio file! This process may take up to a minute per minute of recorded audio.'
 
-queries = ['dogs', 'cats']
+queries = ['um', 'uh', 'umm', 'uhh', 'like', 'well', 'so']
 test = False
 while test != True:
 	if op3nvoice.get_track_list(bundles['_links']['o3v:tracks']['href'])['status'] == 'ready':
@@ -24,22 +24,18 @@ for searchquery in queries:
 	index = 0
 
 	for item in items:
-		print 'Search term: ' + searchquery
 		bundle = op3nvoice.get_bundle(item['href'])
 
 		bundle_id = item['href'][12:]		
 		tracks = op3nvoice.get_track_list(bundle['_links']['o3v:tracks']['href'])['tracks']
 
-		for track in tracks:
-			print track['status']
-
 		search_hits = results[index]['term_results'][0]['matches'][0]['hits']
-		print str(len(search_hits)) + ' times'
+		print 'Search term: "' + searchquery + '" occured ' + str(len(search_hits)) + ' times.'
 
 
 		for search_hit in search_hits:
 			print str(search_hit['start']) + ' -- ' + str(search_hit['end'])
 			++index
 
-
+print 'Deleting audio file'
 op3nvoice.delete_bundle('/v1/bundles/' + bundles['id'])
