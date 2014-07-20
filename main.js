@@ -12,12 +12,14 @@ var returnObject;
 var client = new op3nvoice.Client("api-beta.op3nvoice.com", "aor68mmexQMeNSWEY5GG+SAYP7BKED+RWKVXL8lH2bjbg");
 var queries;
 var bundles, total=0;
+var queriesPlayer;
 
-function startProcess (resu) {
+function startProcess (resu, url, search) {
 	// create file
 	client = new op3nvoice.Client("api-beta.op3nvoice.com", "aor68mmexQMeNSWEY5GG+SAYP7BKED+RWKVXL8lH2bjbg");
-	queries = ['like', 'well', 'so'];
-	var data = {name: "test bundle", media_url: "https://www.dropbox.com/s/yc5nkwczaaw25eq/um test.mp3?dl=1"};
+	queries = search.split("|");
+	queriesPlayer = search;
+	var data = {name: "test bundle", media_url: url};
 
 	returnObject = [{terms: queries}, {url: data.media_url}];
 
@@ -62,9 +64,10 @@ function searchForTerms(resu, getTracks) {
 	// search for each query term
 	console.log('Getting statistics.')
 	var queryCount = 0;
+	var wordAmounts=[];
 	queries.forEach(function(searchquery) {
 
-		var wordAmounts=[], index=0;
+		var index=0;
 
 		client.search({query:searchquery}, function(err, res) {
 			if (err) {
@@ -75,6 +78,7 @@ function searchForTerms(resu, getTracks) {
 			var items = res._links.items;
 
 			var length = 0;
+			var times = 0;
 			items.forEach(function (item) {
 
 				var bundle_id = item.href.slice(12);
@@ -87,13 +91,14 @@ function searchForTerms(resu, getTracks) {
 				search_hits.forEach(function(search_hit) {
 					console.log(search_hit.start + ' -- ' + search_hit.end);
 					length+= search_hit.end-search_hit.start;
+					times++;
 				});
 
 				index++;
 				total+=length;
 			});
 			percent = (length/getTracks.duration)*100;
-			wordAmounts.push({name: searchquery, percent: percent});
+			wordAmounts.push({name: searchquery, times: times});
 
 			console.log('The total time of "' + searchquery + '" being spoken is: ' + length);
 			console.log('And it is ' + percent + '% of your time');
@@ -105,18 +110,16 @@ function searchForTerms(resu, getTracks) {
 			queryCount++;
 			if (queryCount == (queries.length-1)) {
 
-				returnObject.push({wordPercents: wordAmounts});
+				returnObject.push({wordAmounts: wordAmounts});
 				getPlayerData(resu, getTracks);
 			}
 		});
-		
 	});
-	
 }
 
 function getPlayerData(resu, getTracks) {
 	console.log('Getting jplayer data.');
-	client.search({query:"um|uh|umm|uhh|like|well|so"}, function(err, res) {
+	client.search({query:queriesPlayer}, function(err, res) {
 				if (err) {
 					return console.log(err);
 				};
@@ -146,7 +149,14 @@ app.get('/', function(req, res) {
 });
 
 app.post('/info',function(req, res){
-	startProcess(res);
+	req.on('data', function() {
+		var argumentsys = arguments[0] + "";
+		var mediaUrl = argumentsys.split("&")[0].split("=")[1];
+		var searchTerms = argumentsys.split("&")[1].split("=")[1];
+		// console.log(searchTerms);
+
+		startProcess(res, unescape(mediaUrl), unescape(searchTerms));
+	});
 });
 
 app.post('/delete',function(req, res){

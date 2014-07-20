@@ -234,6 +234,7 @@
             },
 
 	    addItemResultMarkers: function(player,audioDurSeconds,itemResult,searchTerms) {
+	    	console.log(itemResult.term_results);
 		if (player && itemResult && itemResult.term_results) {
 		    // Insert the overlay over the slider so mouse events are 
                     // bubbled properly

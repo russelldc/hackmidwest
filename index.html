@@ -22,7 +22,7 @@
                 $.ajax({
                      url: "/info", 
                      type: 'POST', 
-                     // data: "name="+value, 
+                     data: $("#dataForm").serialize(),
                      success: function(data){ 
                         dealWithData(data);
                      }
@@ -35,7 +35,8 @@
                 o3vPlayer.jPlayerOptions.swfPath = 'scripts/jquery';
 
                 // Set to the playback URL for the audio file.
-                var mediaURL = data[1].url.split("?")[0];
+                var mediaURL = data[1].url;
+                // .split("?")[0];
 
                 ////////////////////////////////////////////////////////
 
@@ -68,13 +69,13 @@
                 ////////////////////////////////////////////////////////
 
                 //delete the stuff
-                // $.ajax({
-                //      url: "/delete", 
-                //      type: 'POST', 
-                //      success: function(data){ 
-                //         console.log('deleted');
-                //      }
-                // });
+                $.ajax({
+                     url: "/delete", 
+                     type: 'POST', 
+                     success: function(data){ 
+                        console.log('deleted');
+                     }
+                });
             }
             $(document).ready(function() {
                 $.get('/',function(data,err){
@@ -85,12 +86,17 @@
     
     </head>
     <body>
-        <h3>Presentation Analytics</h3>
+        <h2>Presentation Analytics</h2>
         <br>
         <div id="player_1_search_tags" class="o3v-search-tag-box"></div>
         <div id="player_instance_1"></div>
 
-        <div id="myDiv"><h2>Click the button below when you have entered the required information.</h2></div>
+        <form id="dataForm">
+            MP3 Url: <input type="text" name="mediaUrl"><br>
+            Search Terms: <input type="text" name="searchTerms">
+        </form>
+
+        <div id="myDiv"><h5>Click the button below when you have entered the required information.</h5></div>
         <button type="button" onclick="loadXMLDoc()">Change Content</button>
     </body>
 </html>
