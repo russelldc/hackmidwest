@@ -13,83 +13,84 @@
         <script src="scripts/o3v_player.js" type="text/javascript"></script>
 
         <link rel="stylesheet" href="css/jquery-ui.custom.css"/>
-        <link rel="stylesheet" href="css/o3v-player.css"/>
+        <link href="css/o3v-player.css" rel="stylesheet"  type="text/css"/>
 
         <script type="text/javascript">
 
-            function loadXMLDoc()
-            {
+            function loadXMLDoc(){
+               
                 $.ajax({
                      url: "/info", 
                      type: 'POST', 
                      // data: "name="+value, 
                      success: function(data){ 
-                        // $("#result").html(data);
-                        document.body.innerHTML += data;
+                        dealWithData(data);
                      }
                 });
+            };
 
+            function dealWithData(data) {
+                console.dir(data);
 
-                var ajaxtest = new XMLHttpRequest();
-                ajaxtest.open("POST","/info",true);
-                ajaxtest.send();
+                o3vPlayer.jPlayerOptions.swfPath = 'scripts/jquery';
 
+                // Set to the playback URL for the audio file.
+                var mediaURL = data[1].url.split("?")[0];
+
+                ////////////////////////////////////////////////////////
+
+                // This is a sample search_terms array from a SearchCollection
+                var searchTerms = data[4].search_terms;
+
+                // This is a sample "ItemResult" object from a SearchCollection JSON
+                // object. It is one item in the item_results array.
+                var itemResult =  data[5].item_results[0];
+                // <?php echo substr($item_results, 1, -1); ?>;
+
+                ////////////////////////////////////////////////////////
+                // Create a player and add in search results marks
+                var convDuration = data[6].duration;
+                var player = o3vPlayer.createPlayer("#player_instance_1", mediaURL, convDuration,{volume:0.5});
+                o3vPlayer.addItemResultMarkers(player, convDuration, itemResult, searchTerms);
+
+                ////////////////////////////////////////////////////////
+                // Create words tags for SearchCollection.
+                for (var i=0,c=searchTerms.length;i<c;i++) {
+                    var term = searchTerms[i].term;
+                    var dtag = document.createElement('div');
+                    $(dtag).addClass("o3v-search-tag o3v-search-color-"+i);
+                    $(dtag).text(term);
+                    $("#player_1_search_tags").append(dtag);
+                }
+                dtag = document.createElement('div');
+                $(dtag).addClass("o3v-clear");
+                $("#player_1_search_tags").append(dtag);
+                ////////////////////////////////////////////////////////
+
+                //delete the stuff
+                // $.ajax({
+                //      url: "/delete", 
+                //      type: 'POST', 
+                //      success: function(data){ 
+                //         console.log('deleted');
+                //      }
+                // });
             }
             $(document).ready(function() {
                 $.get('/',function(data,err){
 
                 })
-
-                // Set the path to the jplayer swf file.
-                // o3vPlayer.jPlayerOptions.swfPath = 'scripts/jquery';
-
-                // // Set to the playback URL for the audio file.
-                // var mediaURL = '<?php echo $mediaUrl; ?>';
-
-                // ////////////////////////////////////////////////////////
-
-                // // This is a sample search_terms array from a SearchCollection
-                // var searchTerms = <?php echo $search_terms; ?>;
-
-                // // This is a sample "ItemResult" object from a SearchCollection JSON
-                // // object. It is one item in the item_results array.
-                // var itemResult =  <?php echo substr($item_results, 1, -1); ?>;
-
-                // ////////////////////////////////////////////////////////
-                // // Create a player and add in search results marks
-                // var convDuration = <?php echo $duration; ?>;
-                // var player = o3vPlayer.createPlayer("#player_instance_1", mediaURL, convDuration,{volume:0.5});
-                // o3vPlayer.addItemResultMarkers(player, convDuration, itemResult, searchTerms);
-
-                // ////////////////////////////////////////////////////////
-                // // Create words tags for SearchCollection.
-                // for (var i=0,c=searchTerms.length;i<c;i++) {
-                //     var term = searchTerms[i].term;
-                //     var dtag = document.createElement('div');
-                //     $(dtag).addClass("o3v-search-tag o3v-search-color-"+i);
-                //     $(dtag).text(term);
-                //     $("#player_1_search_tags").append(dtag);
-                // }
-                // dtag = document.createElement('div');
-                // $(dtag).addClass("o3v-clear");
-                // $("#player_1_search_tags").append(dtag);
-                // ////////////////////////////////////////////////////////
-
             });
         </script>
     
     </head>
     <body>
-        <h3>OP3Nvoice JPlayer Demo</h3>
-        <br>
-        Player Example:
-        <br>
-        <em>If no audio player appears, there was not a search result found.</em>
+        <h3>Presentation Analytics</h3>
         <br>
         <div id="player_1_search_tags" class="o3v-search-tag-box"></div>
         <div id="player_instance_1"></div>
 
-        <div id="myDiv"><h2>Let AJAX change this text</h2></div>
+        <div id="myDiv"><h2>Click the button below when you have entered the required information.</h2></div>
         <button type="button" onclick="loadXMLDoc()">Change Content</button>
     </body>
 </html>
